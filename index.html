@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+ 
+</head>
+<body>
+    <canvas id="myChart"> </canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script async>
+  let dataArr=[];
+  async function getData() {
+    const response = await fetch("SAT.csv");
+    const data = await response.text();
+    const rows = data.split("\n").slice(1);
+    console.log(rows);
+    rows.forEach((elem) => {
+              let row = elem.split(",");
+              const school = row[1];
+              const MathSAT = row[5];
+              dataArr.push({school,MathSAT})
+              //console.log(school,MathSAT);
+            });
+          }
+          async function data()
+          {
+           await getData();
+    let data=dataArr;
+      new Chart(
+      document.getElementById('myChart'),
+      {
+        type: 'bar',
+        data: {
+          labels: data.map(row => row.school),
+          datasets: [
+            {
+              label: 'Mean SAT scores 2012',
+              data: data.map(row => row.MathSAT)
+            }
+          ]
+        },
+        options: {
+                      scales: {
+                          y: {
+                              suggestedMin: 0,  // Adjust as needed
+                              suggestedMax: 700, // Adjust as needed
+                          }
+                      }
+                  }
+      }
+      );
+    }
+    data();
+    </script>
+</body>
+</html>
